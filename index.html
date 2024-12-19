@@ -11,26 +11,22 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             height: 100vh;
             margin: 0;
+            padding: 0;
         }
 
         #chartContainer {
-            width: 500px;
-            height: 500px;
-        }
-
-        #info {
-            margin-top: 20px;
-            color: #333;
+            width: 90%; /* Chiều rộng giảm */
+            height: 300px; /* Chiều cao giảm */
+            margin: 0 auto;
         }
 
         button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
+            margin-top: 15px; /* Giảm khoảng cách */
+            padding: 8px 12px; /* Giảm padding */
+            font-size: 14px; /* Giảm font chữ */
             background-color: #007bff;
             color: white;
             border: none;
@@ -109,30 +105,20 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false, // Đảm bảo phù hợp container
                     scales: currentChartType === 'radar' ? {
                         r: { // Tùy chỉnh cho Radar
-                            beginAtZero: true, // Radar: Trục bắt đầu từ 0
-                            angleLines: {
-                                display: true, // Hiển thị các đường nối góc
-                            },
-                            grid: {
-                                circular: true, // Vẽ các đường tròn thay vì đa giác
-                            },
+                            beginAtZero: true,
+                            angleLines: { display: true },
+                            grid: { circular: true },
                             pointLabels: {
-                                font: {
-                                    size: 14,
-                                },
+                                font: { size: 10 }, // Giảm kích thước font nhãn
                                 color: '#000',
                             },
                         },
                     } : {
                         x: { beginAtZero: true }, // Cột: Trục x
                         y: { beginAtZero: true }, // Cột: Trục y
-                    },
-                    elements: {
-                        line: currentChartType === 'radar' ? {
-                            borderJoinStyle: 'round', // Kiểu kết nối giữa các điểm là bo tròn
-                        } : undefined,
                     },
                 },
             });
