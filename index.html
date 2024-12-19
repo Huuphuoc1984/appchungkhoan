@@ -11,19 +11,19 @@
     }
 
     #chartContainer {
-        width: 80%; /* Chiều rộng nhỏ hơn */
-        height: 250px; /* Chiều cao nhỏ hơn */
+        width: 70%; /* Rất nhỏ */
+        height: 200px; /* Rất nhỏ */
         margin: 0 auto;
     }
 
     button {
-        margin-top: 10px; /* Giảm khoảng cách */
-        padding: 6px 10px; /* Giảm padding */
-        font-size: 12px; /* Giảm font chữ */
+        margin-top: 8px; /* Giảm khoảng cách */
+        padding: 4px 8px; /* Rất nhỏ */
+        font-size: 10px; /* Rất nhỏ */
         background-color: #007bff;
         color: white;
         border: none;
-        border-radius: 4px; /* Bo góc nhỏ hơn */
+        border-radius: 3px;
     }
 
     button:hover {
@@ -40,35 +40,34 @@
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false, // Co giãn theo container
+            maintainAspectRatio: false,
             scales: currentChartType === 'radar' ? {
                 r: {
-                    beginAtZero: true,
-                    angleLines: {
-                        display: true,
+                    pointLabels: {
+                        font: {
+                            size: 6, // Rất nhỏ
+                        },
+                        color: '#000',
                     },
                     grid: {
                         circular: true,
                     },
-                    pointLabels: {
-                        font: {
-                            size: 8, // Giảm kích thước font nhãn trong Radar
-                        },
-                        color: '#000',
+                    angleLines: {
+                        display: true,
                     },
                 },
             } : {
                 x: {
                     ticks: {
                         font: {
-                            size: 10, // Giảm kích thước chữ trục X
+                            size: 8, // Rất nhỏ
                         },
                     },
                 },
                 y: {
                     ticks: {
                         font: {
-                            size: 10, // Giảm kích thước chữ trục Y
+                            size: 8, // Rất nhỏ
                         },
                     },
                 },
