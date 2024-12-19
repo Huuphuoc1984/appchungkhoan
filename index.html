@@ -1,77 +1,176 @@
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        height: 100vh;
-        margin: 0;
-        padding: 0;
-    }
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biểu Đồ Radar & Cột</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 500vh;
+            margin: 0;
+            padding: 0;
+        }
 
-    #chartContainer {
-        width: 70%; /* Rất nhỏ */
-        height: 200px; /* Rất nhỏ */
-        margin: 0 auto;
-    }
+        h1 {
+            font-size: 14px; /* Giảm kích thước tiêu đề */
+            margin-bottom: 5px;
+        }
 
-    button {
-        margin-top: 8px; /* Giảm khoảng cách */
-        padding: 4px 8px; /* Rất nhỏ */
-        font-size: 10px; /* Rất nhỏ */
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 3px;
-    }
+        #chartContainer {
+            width: 100%; /* Đảm bảo container chiếm 90% chiều rộng ứng dụng */
+            height: 450px; /* Giảm chiều cao */
+            margin: 0 auto;
+        }
 
-    button:hover {
-        background-color: #0056b3;
-    }
-</style>
+        button {
+            margin: 5px; /* Khoảng cách giữa các nút */
+            padding: 5px 10px; /* Giảm padding */
+            font-size: 12px; /* Giảm font chữ */
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 3px;
+        }
 
-<script>
-    chart = new Chart(ctx, {
-        type: currentChartType,
-        data: {
-            labels: labels,
-            datasets: datasets,
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: currentChartType === 'radar' ? {
-                r: {
-                    pointLabels: {
-                        font: {
-                            size: 6, // Rất nhỏ
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #info {
+            font-size: 12px; /* Giảm font chữ */
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Biểu Đồ Radar & Cột</h1>
+    <div id="chartContainer">
+        <canvas id="chart"></canvas>
+    </div>
+    <div id="info">Đang tải dữ liệu...</div>
+    <button id="toggleButton">Chuyển sang Biểu Đồ Cột</button>
+
+    <script>
+        const apiUrl = "https://script.google.com/macros/s/AKfycby-rSqeTx9ZSLb-C5Fus8-fCV8IgXLeW6pA7vxwMqAtileRgXwQu0bnbqwkXtFvn6FNBg/exec";
+        let chart; // Biến toàn cục lưu biểu đồ
+        let currentChartType = 'radar'; // Loại biểu đồ hiện tại (ban đầu là Radar)
+
+        // Hàm lấy dữ liệu từ API
+        async function fetchData() {
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                document.getElementById('info').innerText = `Lỗi khi lấy dữ liệu: ${error.message}`;
+                throw error;
+            }
+        }
+
+        // Hàm vẽ biểu đồ
+        async function renderChart() {
+            const data = await fetchData();
+
+            const labels = data.map(item => item.label); // Lấy nhãn ngành
+            const strength = data.map(item => item.strength); // Lấy dữ liệu sức mạnh
+            const trend = data.map(item => item.trend); // Lấy dữ liệu xu hướng
+
+            const ctx = document.getElementById('chart').getContext('2d');
+
+            // Xóa biểu đồ cũ nếu đã tồn tại
+            if (chart) {
+                chart.destroy();
+            }
+
+            // Tạo biểu đồ mới
+            chart = new Chart(ctx, {
+                type: currentChartType, // Dùng loại biểu đồ hiện tại
+                data: {
+                    labels: labels, // Nhãn trục x
+                    datasets: [
+                        {
+                            label: 'Sức Mạnh Ngành',
+                            data: strength,
+                            backgroundColor: currentChartType === 'radar' ? 'rgba(75, 192, 192, 0.2)' : 'rgba(75, 192, 192, 1)', // Radar dùng màu mờ, Cột dùng màu đậm
+                            borderColor: 'rgba(75, 192, 192, 1)', // Màu viền
+                            borderWidth: 1,
                         },
-                        color: '#000',
+                        {
+                            label: 'Xu Hướng Ngành',
+                            data: trend,
+                            backgroundColor: currentChartType === 'radar' ? 'rgba(255, 99, 132, 0.2)' : 'rgba(255, 99, 132, 1)', // Radar dùng màu mờ, Cột dùng màu đậm
+                            borderColor: 'rgba(255, 99, 132, 1)', // Màu viền
+                            borderWidth: 1,
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Đảm bảo phù hợp container
+                    scales: currentChartType === 'radar' ? {
+                        r: {
+                            pointLabels: {
+                                font: {
+                                    size: 8, // Giảm kích thước font nhãn
+                                },
+                                color: '#000',
+                            },
+                            grid: {
+                                circular: true,
+                            },
+                            angleLines: {
+                                display: true,
+                            },
+                        },
+                    } : {
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 8, // Giảm kích thước chữ trục X
+                                },
+                            },
+                        },
+                        y: {
+                            ticks: {
+                                font: {
+                                    size: 8, // Giảm kích thước chữ trục Y
+                                },
+                            },
+                        },
                     },
-                    grid: {
-                        circular: true,
-                    },
-                    angleLines: {
-                        display: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    size: 10, // Giảm font chữ trong chú giải
+                                },
+                            },
+                        },
                     },
                 },
-            } : {
-                x: {
-                    ticks: {
-                        font: {
-                            size: 8, // Rất nhỏ
-                        },
-                    },
-                },
-                y: {
-                    ticks: {
-                        font: {
-                            size: 8, // Rất nhỏ
-                        },
-                    },
-                },
-            },
-        },
-    });
-</script>
+            });
+
+            // Cập nhật thời gian cập nhật
+            document.getElementById('info').innerText = "Cập nhật lúc: " + new Date().toLocaleTimeString();
+        }
+
+        // Hàm chuyển đổi loại biểu đồ
+        document.getElementById('toggleButton').addEventListener('click', () => {
+            currentChartType = currentChartType === 'radar' ? 'bar' : 'radar'; // Đổi loại biểu đồ
+            document.getElementById('toggleButton').innerText = 
+                currentChartType === 'radar' ? 'Chuyển sang Biểu Đồ Cột' : 'Chuyển sang Biểu Đồ Radar'; // Cập nhật nhãn nút
+            renderChart(); // Vẽ lại biểu đồ
+        });
+
+        // Gọi vẽ biểu đồ lần đầu
+        renderChart();
+    </script>
+</body>
+</html>
