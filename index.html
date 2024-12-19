@@ -11,40 +11,34 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
-            height: 500vh;
+            justify-content: center;
+            height: 100vh;
             margin: 0;
-            padding: 0;
-        }
-
-        h1 {
-            font-size: 14px; /* Giảm kích thước tiêu đề */
-            margin-bottom: 5px;
         }
 
         #chartContainer {
-            width: 100%; /* Đảm bảo container chiếm 90% chiều rộng ứng dụng */
-            height: 450px; /* Giảm chiều cao */
-            margin: 0 auto;
+            width: 500px;
+            height: 500px;
+        }
+
+        #info {
+            margin-top: 50px;
+            color: #333;
         }
 
         button {
-            margin: 5px; /* Khoảng cách giữa các nút */
-            padding: 5px 10px; /* Giảm padding */
-            font-size: 12px; /* Giảm font chữ */
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
             background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 3px;
+            border-radius: 5px;
         }
 
         button:hover {
             background-color: #0056b3;
-        }
-
-        #info {
-            font-size: 12px; /* Giảm font chữ */
-            margin: 5px 0;
         }
     </style>
 </head>
@@ -100,59 +94,45 @@
                             data: strength,
                             backgroundColor: currentChartType === 'radar' ? 'rgba(75, 192, 192, 0.2)' : 'rgba(75, 192, 192, 1)', // Radar dùng màu mờ, Cột dùng màu đậm
                             borderColor: 'rgba(75, 192, 192, 1)', // Màu viền
-                            borderWidth: 1,
+                            borderWidth: currentChartType === 'radar' ? 2 : 1, // Độ dày viền
+                            tension: currentChartType === 'radar' ? 0.4 : 0, // Làm mềm đường nối chỉ áp dụng cho Radar
                         },
                         {
                             label: 'Xu Hướng Ngành',
                             data: trend,
                             backgroundColor: currentChartType === 'radar' ? 'rgba(255, 99, 132, 0.2)' : 'rgba(255, 99, 132, 1)', // Radar dùng màu mờ, Cột dùng màu đậm
                             borderColor: 'rgba(255, 99, 132, 1)', // Màu viền
-                            borderWidth: 1,
+                            borderWidth: currentChartType === 'radar' ? 2 : 1, // Độ dày viền
+                            tension: currentChartType === 'radar' ? 0.4 : 0, // Làm mềm đường nối chỉ áp dụng cho Radar
                         },
                     ],
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false, // Đảm bảo phù hợp container
                     scales: currentChartType === 'radar' ? {
-                        r: {
+                        r: { // Tùy chỉnh cho Radar
+                            beginAtZero: true, // Radar: Trục bắt đầu từ 0
+                            angleLines: {
+                                display: true, // Hiển thị các đường nối góc
+                            },
+                            grid: {
+                                circular: true, // Vẽ các đường tròn thay vì đa giác
+                            },
                             pointLabels: {
                                 font: {
-                                    size: 8, // Giảm kích thước font nhãn
+                                    size: 14,
                                 },
                                 color: '#000',
                             },
-                            grid: {
-                                circular: true,
-                            },
-                            angleLines: {
-                                display: true,
-                            },
                         },
                     } : {
-                        x: {
-                            ticks: {
-                                font: {
-                                    size: 8, // Giảm kích thước chữ trục X
-                                },
-                            },
-                        },
-                        y: {
-                            ticks: {
-                                font: {
-                                    size: 8, // Giảm kích thước chữ trục Y
-                                },
-                            },
-                        },
+                        x: { beginAtZero: true }, // Cột: Trục x
+                        y: { beginAtZero: true }, // Cột: Trục y
                     },
-                    plugins: {
-                        legend: {
-                            labels: {
-                                font: {
-                                    size: 10, // Giảm font chữ trong chú giải
-                                },
-                            },
-                        },
+                    elements: {
+                        line: currentChartType === 'radar' ? {
+                            borderJoinStyle: 'round', // Kiểu kết nối giữa các điểm là bo tròn
+                        } : undefined,
                     },
                 },
             });
