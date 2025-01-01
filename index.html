@@ -26,8 +26,14 @@
             color: #333;
         }
 
-        button {
+        .button-container {
             margin-top: 20px;
+            margin-bottom: 10px; /* Tạo khoảng cách với "Cập nhật lúc" */
+            display: flex;
+            justify-content: center;
+        }
+
+        button {
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
@@ -35,6 +41,7 @@
             color: white;
             border: none;
             border-radius: 5px;
+            margin: 5px;
         }
 
         button:hover {
@@ -47,8 +54,10 @@
     <div id="chartContainer">
         <canvas id="chart"></canvas>
     </div>
-    <div id="info">Đang tải dữ liệu...</div>
-    <button id="toggleButton">Chuyển sang Biểu Đồ Cột</button>
+    <div class="button-container">
+        <button id="toggleButton">Chuyển sang Biểu Đồ Cột</button>
+    </div>
+    <div id="info">Cập nhật lúc: Đang tải dữ liệu...</div>
 
     <script>
         const apiUrl = "https://script.google.com/macros/s/AKfycby-rSqeTx9ZSLb-C5Fus8-fCV8IgXLeW6pA7vxwMqAtileRgXwQu0bnbqwkXtFvn6FNBg/exec";
@@ -95,7 +104,6 @@
                             backgroundColor: currentChartType === 'radar' ? 'rgba(75, 192, 192, 0.2)' : 'rgba(75, 192, 192, 1)', // Radar dùng màu mờ, Cột dùng màu đậm
                             borderColor: 'rgba(75, 192, 192, 1)', // Màu viền
                             borderWidth: currentChartType === 'radar' ? 2 : 1, // Độ dày viền
-                            tension: currentChartType === 'radar' ? 0.4 : 0, // Làm mềm đường nối chỉ áp dụng cho Radar
                         },
                         {
                             label: 'Xu Hướng Ngành',
@@ -103,7 +111,6 @@
                             backgroundColor: currentChartType === 'radar' ? 'rgba(255, 99, 132, 0.2)' : 'rgba(255, 99, 132, 1)', // Radar dùng màu mờ, Cột dùng màu đậm
                             borderColor: 'rgba(255, 99, 132, 1)', // Màu viền
                             borderWidth: currentChartType === 'radar' ? 2 : 1, // Độ dày viền
-                            tension: currentChartType === 'radar' ? 0.4 : 0, // Làm mềm đường nối chỉ áp dụng cho Radar
                         },
                     ],
                 },
@@ -111,12 +118,12 @@
                     responsive: true,
                     scales: currentChartType === 'radar' ? {
                         r: { // Tùy chỉnh cho Radar
-                            beginAtZero: true, // Radar: Trục bắt đầu từ 0
+                            beginAtZero: true,
                             angleLines: {
-                                display: true, // Hiển thị các đường nối góc
+                                display: true,
                             },
                             grid: {
-                                circular: true, // Vẽ các đường tròn thay vì đa giác
+                                circular: true,
                             },
                             pointLabels: {
                                 font: {
@@ -126,13 +133,8 @@
                             },
                         },
                     } : {
-                        x: { beginAtZero: true }, // Cột: Trục x
-                        y: { beginAtZero: true }, // Cột: Trục y
-                    },
-                    elements: {
-                        line: currentChartType === 'radar' ? {
-                            borderJoinStyle: 'round', // Kiểu kết nối giữa các điểm là bo tròn
-                        } : undefined,
+                        x: { beginAtZero: true },
+                        y: { beginAtZero: true },
                     },
                 },
             });
