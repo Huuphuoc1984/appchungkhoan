@@ -24,10 +24,29 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       border-radius: 8px;
     }
+    .button-container {
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 5px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <h1>Sức Mạnh Ngành</h1>
-  <img src="Picture.png" alt="Sức Mạnh Ngành">
+  <div class="button-container">
+    <button onclick="changeImage('picture.png')">Trụ cột</button>
+    <button onclick="changeImage('phu.png')">Ngành phụ</button>
+  </div>
+  <img id="displayedImage" src="Picture.png" alt="Sức Mạnh Ngành">
+
+  <script>
+    function changeImage(src) {
+      document.getElementById('displayedImage').src = src;
+    }
+  </script>
 </body>
 </html>
