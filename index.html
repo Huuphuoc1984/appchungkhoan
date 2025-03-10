@@ -8,14 +8,20 @@
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      margin: 0;
-      padding: 0;
       background-color: #f9f9f9;
+      margin: 0;
+      padding-top: 60px;
     }
+
+    .spacer {
+      height: 60px;
+    }
+
     h1 {
+      margin: 20px 0;
       color: #333;
-      margin-top: 20px;
     }
+
     img {
       margin-top: 20px;
       max-width: 80%;
@@ -24,29 +30,77 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       border-radius: 8px;
     }
+
     .button-container {
       margin-top: 20px;
     }
+
     button {
       padding: 10px 20px;
-      font-size: 16px;
       margin: 5px;
+      font-size: 16px;
       cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    button.active {
+      box-shadow: 0 0 15px #ffd700;
+      background-color: #ff9800;
+    }
+
+    h1 {
+      margin-top: 20px;
+      color: #333;
+    }
+
+    .image-container {
+      margin-bottom: 15px;
     }
   </style>
 </head>
 <body>
-  <h1>Sức Mạnh Ngành</h1>
-  <div class="button-container">
-    <button onclick="changeImage('Picture.png')">Trụ cột</button>
-    <button onclick="changeImage('phu.png')">Ngành phụ</button>
+  <div class="spacer"></div>
+
+  <h1 id="sectorTitle">Trụ cột</h1>
+
+  <div class="image-container">
+    <img id="displayedImage" src="Picture.png" alt="Sector Image">
   </div>
-  <img id="displayedImage" src="Picture.png" alt="Sức Mạnh Ngành">
+
+  <div class="button-container">
+    <button class="active" onclick="changeImage(this, 'Picture.png', 'Trụ cột')">Trụ cột</button>
+    <button onclick="changeImage(this, 'phu.png', 'Ngành phụ')">Ngành phụ</button>
+  </div>
 
   <script>
-    function changeImage(src) {
+    function changeImage(btn, src, title) {
       document.getElementById('displayedImage').src = src;
+      document.getElementById('sectorTitle').textContent = title;
+
+      let buttons = document.querySelectorAll('.button-container button');
+      buttons.forEach(button => button.classList.remove('active'));
+      btn.classList.add('active');
     }
   </script>
+
+  <style>
+    .spacer {
+      height: 60px;
+      width: 100%;
+    }
+
+    button.active {
+      box-shadow: 0 0 15px #ffd700;
+      background-color: #ff9800;
+    }
+  </style>
 </body>
 </html>
